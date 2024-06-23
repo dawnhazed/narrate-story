@@ -24,6 +24,7 @@ import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
 import com.dicoding.picodiploma.loginwithanimation.view.adapter.StoryAdapter
 import com.dicoding.picodiploma.loginwithanimation.view.add.AddActivity
 import com.dicoding.picodiploma.loginwithanimation.view.login.LoginActivity
+import com.dicoding.picodiploma.loginwithanimation.view.maps.MapsActivity
 import com.dicoding.picodiploma.loginwithanimation.view.welcome.WelcomeActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -58,12 +59,6 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
         }
-       /* viewModel.getSession().observe(this) { user ->
-            if (!user.isLogin) {
-                startActivity(Intent(this, WelcomeActivity::class.java))
-                finish()
-            }
-        } */
 
         setupView()
         setupAction()
@@ -104,8 +99,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.getStories()
     }
 
-    //logout
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
@@ -115,6 +108,10 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_logout -> {
                 logout()
+                true
+            }
+            R.id.action_map -> {
+                openMap()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -133,6 +130,11 @@ class MainActivity : AppCompatActivity() {
         finish()
 
         Toast.makeText(this, "Logout berhasil", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun openMap(){
+        val intent = Intent(this, MapsActivity::class.java)
+        startActivity(intent)
     }
 
     private fun showLoading(isLoading: Boolean) {

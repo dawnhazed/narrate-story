@@ -16,5 +16,6 @@
 
     <string name="dialog">Anda berhasil login. Sudah tidak sabar untuk belajar ya?</string>
     <string name="belum"><u>Belum punya akun?</u></string>
+    <string name="title_activity_maps">MapsActivity</string>
 
 </resources>

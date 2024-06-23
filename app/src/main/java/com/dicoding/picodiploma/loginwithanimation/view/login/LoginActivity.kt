@@ -93,6 +93,8 @@ class LoginActivity : AppCompatActivity() {
             if (response?.loginResult?.token != null) {
                 val email = binding.emailEditText.text.toString()
                 val token = response.loginResult.token
+                saveToken(token)
+
                 lifecycleScope.launch {
                     pref.saveSession(UserModel(email, token, true))
                     showDialogue("Anda berhasil login. Sudah tidak sabar untuk belajar ya?")
@@ -127,7 +129,7 @@ class LoginActivity : AppCompatActivity() {
                 intent.flags =
                     Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
-                finish()
+                //finish()
             }
             create()
             show()

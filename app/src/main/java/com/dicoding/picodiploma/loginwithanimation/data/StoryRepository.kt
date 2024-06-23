@@ -19,11 +19,6 @@ class StoryRepository private constructor(
     private val apiService: ApiService,
     private val userPreferences: UserPreference
 ) {
-
-   /*  fun getStories(): Call<StoryResponse> {
-        return apiService.getStories()
-    } */
-
     suspend fun getStories() : StoryResponse{
         return apiService.getStories()
     }
@@ -45,6 +40,16 @@ class StoryRepository private constructor(
         })
         return data
     }
+
+    suspend fun getLocation() : StoryResponse {
+        //return apiService.getStoriesWithLocation(1)
+        return try {
+            apiService.getStoriesWithLocation()
+        } catch (e: Exception) {
+            throw Exception("Network request failed", e)
+        }
+    }
+
 
 
     companion object {
