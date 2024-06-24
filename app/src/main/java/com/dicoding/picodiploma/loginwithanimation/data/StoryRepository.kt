@@ -11,6 +11,7 @@ import com.dicoding.picodiploma.loginwithanimation.data.api.RegisterResponse
 import com.dicoding.picodiploma.loginwithanimation.data.api.StoryDetailResponse
 import com.dicoding.picodiploma.loginwithanimation.data.api.StoryResponse
 import com.dicoding.picodiploma.loginwithanimation.data.pref.UserPreference
+import kotlinx.coroutines.flow.first
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,6 +21,7 @@ class StoryRepository private constructor(
     private val userPreferences: UserPreference
 ) {
     suspend fun getStories() : StoryResponse{
+        val token = userPreferences.getSession().first().token
         return apiService.getStories()
     }
 

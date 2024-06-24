@@ -48,10 +48,11 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         adapter = StoryAdapter()
-        pref = UserPreference.getInstance(dataStore)
 
         binding.mainRv.layoutManager = LinearLayoutManager(this)
         binding.mainRv.adapter = adapter
+
+        pref = UserPreference.getInstance(dataStore)
 
         lifecycleScope.launch {
             if (!pref.getSession().first().isLogin) {
@@ -62,12 +63,12 @@ class MainActivity : AppCompatActivity() {
 
         setupView()
         setupAction()
-        getStories()
+        submitData()
     }
 
     override fun onResume() {
         super.onResume()
-        getStories()
+        submitData()
     }
 
     private fun setupView() {
@@ -90,13 +91,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getStories() {
-        showLoading(true)
-        viewModel.stories.observe(this, Observer { stories ->
-            adapter.submitList(stories)
-            showLoading(false)
+    private fun submitData() {
+        val adapter = StoryAdapter()
+        binding.mainRv.adapter = adapter
+        viewModel.quote.observe(this, Observer{ pagingData ->
+            adapter.submitData(lifecycle, pagingData)
         })
-        viewModel.getStories()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
