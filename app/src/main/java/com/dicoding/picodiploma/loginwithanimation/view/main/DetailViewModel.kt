@@ -1,6 +1,7 @@
 package com.dicoding.picodiploma.loginwithanimation.view.main
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,7 +18,12 @@ class StoryDetailViewModel(private val repository: StoryRepository) : ViewModel(
 
     fun fetchStoryDetail(storyId: String) {
         repository.getStoryDetail(storyId).observeForever { story ->
-            _storyDetail.value = story
+            if (story != null) {
+                Log.d("StoryDetailViewModel", "Story detail updated: $story")
+                _storyDetail.value = story
+            } else {
+                Log.e("StoryDetailViewModel", "Story detail is null")
+            }
         }
     }
 }

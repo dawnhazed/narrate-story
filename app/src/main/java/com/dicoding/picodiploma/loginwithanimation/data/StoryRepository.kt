@@ -21,8 +21,11 @@ class StoryRepository private constructor(
     private val userPreferences: UserPreference
 ) {
     suspend fun getStories() : StoryResponse{
-        val token = userPreferences.getSession().first().token
-        return apiService.getStories()
+        return try {
+            apiService.getStories()
+        } catch (e: Exception) {
+            StoryResponse(emptyList())
+        }
     }
 
     fun getStoryDetail(storyId: String): LiveData<StoryDetailResponse> {
@@ -33,6 +36,8 @@ class StoryRepository private constructor(
                 if (response.isSuccessful) {
                     data.value = response.body()
                     Log.d("detail activity", "Load story detail success!")
+                } else {
+                    Log.d("detail activity", "fetching not success")
                 }
             }
 

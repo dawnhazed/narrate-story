@@ -12,6 +12,7 @@ import com.dicoding.picodiploma.loginwithanimation.data.pref.UserPreference
 import com.dicoding.picodiploma.loginwithanimation.data.pref.dataStore
 import com.dicoding.picodiploma.loginwithanimation.view.login.LoginActivity
 import com.dicoding.picodiploma.loginwithanimation.view.main.MainActivity
+import com.dicoding.picodiploma.loginwithanimation.view.welcome.WelcomeActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -26,7 +27,7 @@ class SplashActivity : AppCompatActivity() {
             if (isLoggedIn) {
                 startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             } else {
-                startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
+                startActivity(Intent(this@SplashActivity, WelcomeActivity::class.java))
             }
             finish()
         }

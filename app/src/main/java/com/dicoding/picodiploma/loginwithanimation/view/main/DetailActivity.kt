@@ -49,18 +49,24 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val storyId = intent.getStringExtra("STORY_ID")
-        Log.d("detail activity", "story id received : $storyId")
 
-        setupView()
         if (storyId != null) {
             showLoading(true)
+            Log.d("detail activity", "story id received : $storyId")
             viewModel.fetchStoryDetail(storyId)
         }
 
         viewModel.storyDetail.observe(this, Observer { storyDetail ->
-            showLoading(false)
-            storyDetail.let { displayStoryDetail(it) }
+            if (storyDetail != null) {
+                Log.d("DetailActivity", "Story detail observed: $storyDetail")
+                displayStoryDetail(storyDetail)
+                showLoading(false)
+            } else {
+                Log.e("DetailActivity", "Story detail is null")
+            }
         })
+
+        setupView()
     }
 
     private fun setupView() {

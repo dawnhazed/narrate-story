@@ -21,17 +21,27 @@ import com.dicoding.picodiploma.loginwithanimation.data.pref.dataStore
 import com.dicoding.picodiploma.loginwithanimation.di.Injection
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class MainViewModel(private val repository: UserRepository, private val storyRepository: StoryRepository, quoteRepository: QuoteRepository) : ViewModel() {
+class MainViewModel(
+    private val repository: UserRepository,
+    private val storyRepository: StoryRepository,
+    quoteRepository: QuoteRepository,
+    private val pref: UserPreference
+    ) : ViewModel() {
 
     private val _stories = MutableLiveData<List<ListStoryItem>>()
     val stories: LiveData<List<ListStoryItem>> = _stories
+    private val _isLoggedIn = MutableLiveData<Boolean>()
+    val isLoggedIn: LiveData<Boolean> = _isLoggedIn
 
     val quote: LiveData<PagingData<ListStoryItem>> =
         quoteRepository.getStories().cachedIn(viewModelScope)
 
-    init { getStories() }
+    init {
+        // checkLogin()
+        getStories() }
 
     fun getSession(): LiveData<UserModel> {
         return repository.getSession().asLiveData()
@@ -43,20 +53,43 @@ class MainViewModel(private val repository: UserRepository, private val storyRep
         }
     } */
 
-    fun getStories() {
+    suspend fun checkLogin() : UserModel{
+        return pref.getSession().first()
+        /* viewModelScope.launch {
+            val session = pref.getSession().first()
+            _isLoggedIn.value = session.isLogin
+        } */
+    }
+
+    private fun getStories() {
         viewModelScope.launch {
-            val response = storyRepository.getStories()
-            _stories.value = response.listStory
+            try {
+                val response = storyRepository.getStories()
+                if (response != null && response.listStory != null) {
+                    _stories.value = response.listStory
+                } else {
+                    _stories.value = emptyList()
+                    // Log an error or handle the null case appropriately
+                }
+            } catch (e: Exception) {
+                _stories.value = emptyList()
+                // Log the exception or handle the error appropriately
+            }
         }
     }
 
 }
 
-class StoryViewModelFactory(private val repository: UserRepository, private val storyRepository: StoryRepository, private val quoteRepository: QuoteRepository) :
+class StoryViewModelFactory(
+    private val repository: UserRepository,
+    private val storyRepository: StoryRepository,
+    private val quoteRepository: QuoteRepository,
+    private val pref: UserPreference
+) :
     ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return MainViewModel(repository, storyRepository, quoteRepository) as T
+        return MainViewModel(repository, storyRepository, quoteRepository, pref) as T
     }
 
     companion object {
@@ -69,7 +102,8 @@ class StoryViewModelFactory(private val repository: UserRepository, private val 
                     INSTANCE = StoryViewModelFactory(
                         Injection.provideRepository(context),
                         Injection.provideStoryRepository(context),
-                        Injection.provideQuoteRepository(context)
+                        Injection.provideQuoteRepository(context),
+                        UserPreference.getInstance(context.dataStore)
                     )
                 }
             }

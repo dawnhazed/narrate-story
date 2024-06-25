@@ -54,21 +54,30 @@ class MainActivity : AppCompatActivity() {
 
         pref = UserPreference.getInstance(dataStore)
 
-        lifecycleScope.launch {
-            if (!pref.getSession().first().isLogin) {
+        lifecycleScope.launch{
+            val session = viewModel.checkLogin()
+            Log.d("MainActivity", "User session: $session")
+
+            if (!session.isLogin) {
                 startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                // submitData()
                 finish()
+            } else {
+                submitData()
             }
         }
 
+       /* viewModel.isLoggedIn.observe(this, Observer { isLoggedIn ->
+            if (!isLoggedIn) {
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            } else {
+                submitData()
+            }
+        }) */
+
         setupView()
         setupAction()
-        submitData()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        submitData()
     }
 
     private fun setupView() {
@@ -95,7 +104,13 @@ class MainActivity : AppCompatActivity() {
         val adapter = StoryAdapter()
         binding.mainRv.adapter = adapter
         viewModel.quote.observe(this, Observer{ pagingData ->
-            adapter.submitData(lifecycle, pagingData)
+            if (pagingData != null) {
+                adapter.submitData(lifecycle, pagingData)
+                Log.d("MainActivity", "Data submitted to adapter")
+            } else {
+                Log.d("MainActivity", "No data available")
+                // Show a message or handle the empty state
+            }
         })
     }
 

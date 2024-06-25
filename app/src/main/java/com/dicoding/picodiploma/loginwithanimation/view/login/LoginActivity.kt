@@ -16,6 +16,7 @@ import com.dicoding.picodiploma.loginwithanimation.data.pref.UserModel
 import com.dicoding.picodiploma.loginwithanimation.data.pref.UserPreference
 import com.dicoding.picodiploma.loginwithanimation.data.pref.dataStore
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityLoginBinding
+import com.dicoding.picodiploma.loginwithanimation.view.SplashActivity
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
 import com.dicoding.picodiploma.loginwithanimation.view.main.MainActivity
 import com.dicoding.picodiploma.loginwithanimation.view.signup.SignupActivity
@@ -125,7 +126,7 @@ class LoginActivity : AppCompatActivity() {
             setTitle("Yeah!")
             setMessage(message)
             setPositiveButton("Lanjut") { _, _ ->
-                val intent = Intent(context, MainActivity::class.java)
+                val intent = Intent(context, SplashActivity::class.java)
                 intent.flags =
                     Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)

@@ -93,4 +93,5 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1") // TestDispatcher
     testImplementation ("org.mockito:mockito-core:4.4.0")
     testImplementation("org.mockito:mockito-inline:4.4.0")
+    testImplementation("org.robolectric:robolectric:4.7.3")
 }
